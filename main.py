@@ -8,16 +8,16 @@ bot = telebot.TeleBot(token)
 @bot.message_handler(commands=['go'])
 def go(message):
     if message.from_user.first_name not in Pokemon.pokemons.keys():
-        chance = randint(1,3)
-        if chance == 1:
+        chance = randint(1,25)
+        if chance <= 1:
             pokemon = Pokemon(message.from_user.first_name)
-            bot.reply_to(message,'Класс твоего покемона: Обычный(просто обычный покемон)')
-        elif chance == 2:
+            bot.reply_to(message,'Класс твоего покемона: Обычный(просто обычный покемон), твоя сила и атака средние')
+        elif chance <= 10:
             pokemon = Wizard(message.from_user.first_name)
-            bot.reply_to(message, 'Класс твоего покемона: Волшебник(в некоторых случиях ты можешь заблокировать урон)')
-        elif chance == 3:
+            bot.reply_to(message, 'Класс твоего покемона: Волшебник(в некоторых случиях ты можешь заблокировать урон), твое здоровье больше чем у других, но атака меньше')
+        elif chance <= 19:
             pokemon = Fighter(message.from_user.first_name)
-            bot.reply_to(message, 'Класс твоего покемона: Воин(Всегда может нанести супер удар)')
+            bot.reply_to(message, 'Класс твоего покемона: Воин(Всегда может нанести супер удар),твое здоровье меньше чем у других, но у тебя сильная атака')
         bot.send_message(message.chat.id, pokemon.info())
         bot.send_photo(message.chat.id, pokemon.show_img())
     else:
@@ -63,5 +63,6 @@ def help(message):
 
                   
 bot.infinity_polling(none_stop=True)
+
 
 
