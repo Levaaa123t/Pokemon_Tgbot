@@ -57,10 +57,12 @@ class Pokemon:
 """
     def attack(self, enemy):
         if isinstance(enemy, Wizard): # Проверка на то, что enemy является типом данных Wizard (является экземпляром класса Волшебник)
-            chance2 = randint(1,5)
-            if chance2 == 1 or 2:
-                return "Покемон-волшебник применил щит в сражении"
-        elif enemy.hp > self.power:
+            chance2 = randint(1,10)
+            self.hp = randint(70,110)
+            self.power = randint(5,15)
+            if chance2 >= 5:
+                return f"Покемон-волшебник({self.pokemon_trainer}) применил щит в сражении"
+        if enemy.hp > self.power:
             enemy.hp -= self.power
             return f"""Сражение {self.pokemon_trainer} с {enemy.pokemon_trainer}
 Здоровье покемона @{self.pokemon_trainer}:{self.hp}
@@ -82,6 +84,8 @@ class Wizard(Pokemon):
 
 class Fighter(Pokemon):
     def attack(self, enemy):
+        self.hp = randint(40, 70)
+        self.power = randint(15,30)
         super_power = randint(5,15)
         self.power += super_power
         result = super().attack(enemy)
