@@ -60,8 +60,8 @@ class Pokemon:
             chance2 = randint(1,10)
             self.hp = randint(70,110)
             self.power = randint(5,15)
-            if chance2 >= 5:
-                return f"Покемон-волшебник({self.pokemon_trainer}) применил щит в сражении"
+            if chance2 >= 6:
+                return f"Покемон-волшебник({enemy.pokemon_trainer}) применил щит в сражении"
         if enemy.hp > self.power:
             enemy.hp -= self.power
             return f"""Сражение {self.pokemon_trainer} с {enemy.pokemon_trainer}
@@ -91,5 +91,6 @@ class Fighter(Pokemon):
         result = super().attack(enemy)
         self.power -= super_power
         return result + f"\nБоец применил супер-атаку силой:{super_power} "
+
 
 
