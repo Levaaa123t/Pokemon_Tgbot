@@ -1,5 +1,7 @@
 from random import randint
 import requests
+from datetime import datetime, timedelta
+
 
 
 class Pokemon:
@@ -15,6 +17,7 @@ class Pokemon:
         self.level = level
         self.hp = randint(50, 100)
         self.power = randint(10,20)
+        self.last_feed_time = datetime.now
         Pokemon.pokemons[pokemon_trainer] = self
     # Метод для получения картинки покемона через API
     def get_img(self):
@@ -36,16 +39,25 @@ class Pokemon:
         else:
             return "Pikachu"
     def give_food(self):
-        if self.feed <= 1:    
+        if self.feed >= 1:    
             self.feed -=  1
             self.level += 0.5
             self.hp += randint(5,10)
             return f'Вы успешно покормили своего покемона! Количество еды для покемона: {self.feed}, его уровень: {self.level}, его здоровье:{self.hp}'
-        #elif self.feed <= 1:
-         #   self.feed += 1
-          #  self.level += 0.5
         else:
             return'У вас нет доступной еды для покемона!'
+        
+    def feed3(self, feed_interval = 20, hp_increase = 10 ):
+        current_time = datetime.now()
+        delta_time = timedelta(seconds=feed_interval)  
+        if (current_time - self.last_feed_time) > delta_time:
+            self.hp += hp_increase
+            self.last_feed_time = current_time
+            return f"Здоровье покемона увеличено. Текущее здоровье: {self.hp}"
+        
+        else:
+            return f"Следующее время кормления покемона: {current_time+delta_time}"  
+            
 
     # Метод класса для получения информации
     def info(self):
@@ -58,9 +70,9 @@ class Pokemon:
     def attack(self, enemy):
         if isinstance(enemy, Wizard): # Проверка на то, что enemy является типом данных Wizard (является экземпляром класса Волшебник)
             chance2 = randint(1,10)
-            self.hp = randint(70,110)
-            self.power = randint(5,15)
-            if chance2 >= 6:
+            #self.hp = randint(70,110)
+            #self.power = randint(5,15)
+            if chance2 >= 7:
                 return f"Покемон-волшебник({enemy.pokemon_trainer}) применил щит в сражении"
         if enemy.hp > self.power:
             enemy.hp -= self.power
@@ -80,17 +92,19 @@ class Pokemon:
         return self.img
 
 class Wizard(Pokemon):
-    pass
+    def feed3(self):
+        super().feed3(feed_interval=10)
 
 class Fighter(Pokemon):
     def attack(self, enemy):
-        self.hp = randint(40, 70)
-        self.power = randint(15,30)
+        #self.hp = randint(40, 70)
+        #self.power = randint(15,30)
         super_power = randint(5,15)
         self.power += super_power
         result = super().attack(enemy)
         self.power -= super_power
         return result + f"\nБоец применил супер-атаку силой:{super_power} "
-
+    def feed3(self):
+        super().feed3(hp_increase=20)
 
 
