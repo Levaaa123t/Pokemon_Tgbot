@@ -8,14 +8,14 @@ bot = telebot.TeleBot(token)
 @bot.message_handler(commands=['go'])
 def go(message):
     if message.from_user.first_name not in Pokemon.pokemons.keys():
-        chance = randint(1,25)
-        if chance <= 1:
+        chance = randint(1,29)
+        if chance <= 9:
             pokemon = Pokemon(message.from_user.first_name)
             bot.reply_to(message,'Класс твоего покемона: Обычный(просто обычный покемон), твоя сила и атака средние')
-        elif chance <= 10:
+        elif 10 <= chance <= 24:
             pokemon = Wizard(message.from_user.first_name)
             bot.reply_to(message, 'Класс твоего покемона: Волшебник(в некоторых случиях ты можешь заблокировать урон), твое здоровье больше чем у других, но атака меньше')
-        elif chance <= 19:
+        else:
             pokemon = Fighter(message.from_user.first_name)
             bot.reply_to(message, 'Класс твоего покемона: Воин(Всегда может нанести супер удар),твое здоровье меньше чем у других, но у тебя сильная атака')
         bot.send_message(message.chat.id, pokemon.info())
@@ -36,12 +36,17 @@ def attack_pok(message):
     else:
             bot.send_message(message.chat.id, "Чтобы атаковать, нужно ответить на сообщения того, кого хочешь атаковать")
 
-@bot.message_handler(commands=['feed'])
-def feed(message):
-    if message.from_user.first_name in Pokemon.pokemons.keys():
-        pokemon = Pokemon.pokemons[message.from_user.first_name]
-        bot.send_message(message.chat.id,pokemon.give_food())
 
+
+@bot.message_handler(commands=['feed'])
+def feed_pok(message):
+    if message.from_user.first_name in Pokemon.pokemons.keys():
+        pok = Pokemon.pokemons[message.from_user.first_name]
+        response = pok.feed3()
+        bot.send_message(message.chat.id, response)
+    else:
+        bot.reply_to(message, "У вас нет покемона")
+ 
 
 @bot.message_handler(commands=['level'])
 def level(message):
@@ -58,11 +63,13 @@ def information(message):
 @bot.message_handler(commands=['help'])
 def help(message):
     bot.reply_to(message, """\
-У меня есть такие команды: /go; /feed; /level; /info\
+У меня есть такие команды: /go; /feed; /level; /info; /attack\
 """)
 
-                  
+
 bot.infinity_polling(none_stop=True)
+
+
 
 
 
